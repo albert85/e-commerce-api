@@ -12,7 +12,7 @@ const checkAuthStatus = (req, res, next) => {
     res,
     403,
     false,
-    "Unauthorized Action, Please register or login",
+    "Unauthorized Action, Please register or login"
   );
 }
 
