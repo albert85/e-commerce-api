@@ -8,7 +8,8 @@ async function addToCart(req, res) {
 
     items.map(async (eachCartItem) => {
       const cartTtems = {
-        ...eachCartItem,
+        quantity: eachCartItem.quantity,
+        productId: eachCartItem.productId,
         userId: decodedToken.id,
         createdAt: new Date(),
         updatedAt: new Date(),

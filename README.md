@@ -5,3 +5,4 @@ An e-commerce-api
 - Launch the app and navigate to `http://localhost:5000/api-docs`
 
 #### Launching the API
+
