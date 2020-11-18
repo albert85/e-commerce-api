@@ -1,0 +1,541 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "E-commerce",
+    "description": "An Application to manage e-commerce"
+  },
+  "host": "localhost:5000",
+  "basePath": "/api/v1",
+  "tags": [
+    {
+      "name": "User",
+      "description": "API for users in the system"
+    },
+    {
+      "name": "Cart",
+      "description": " API for cart in the system"
+    },
+    {
+      "name": "Product",
+      "description": " API for Product in the system"
+    }
+  ],
+  "schemes": ["http", "https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/user": {
+      "post": {
+        "tags": ["User"],
+        "summary": "To authenticate user",
+        "description": "To authenticate user",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "require": true,
+            "description": "Email used to autheticate user",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "user@domain.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "Test123?"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User successfully login"
+          },
+          "404": {
+            "description": "User not found or inccorrect credentials"
+          }
+        }
+      }
+    },
+    "/cart": {
+      "post": {
+        "tags": ["Cart"],
+        "summary": "Add new items to cart",
+        "description": "Add new items to cart",
+        "parameters": [
+          {
+            "name": "items",
+            "in": "body",
+            "description": "items we want to create",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "integer",
+                        "example": 1000
+                      },
+                      "productId": {
+                        "type": "integer",
+                        "example": 2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "New item is added to the cart"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "get": {
+        "tags": ["Cart"],
+        "summary": "Get cart details",
+        "description": "Get cart details",
+        "responses": {
+          "200": {
+            "description": "Cart details successfully retrieved"
+          },
+          "400": {
+            "description": "Cart details not successfully retrieved"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/cart/{cartId}": {
+      "delete": {
+        "tags": ["Cart"],
+        "summary": "Delete item from cart",
+        "description": "Delete item from cart",
+        "parameters": [
+          {
+            "name": "cartId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "The cart item id to be deleted from the cart"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleting item from cart was successfully"
+          },
+          "400": {
+            "description": "Deleting item from cart was not successfully"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/product": {
+      "get": {
+        "tags": ["Product"],
+        "summary": "Get Products from the database",
+        "description": "Get Products from the database",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "pageSize",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "pageNumber",
+            "type": "integer",
+            "minimum": 0
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrived all products/items",
+            "schema": {
+              "$ref": "#/definitions/ListResponse"
+            }
+          },
+          "400": {
+            "description": "Not successfully retriving all products/items",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "422": {
+            "description": "Wrong credential supplied",
+            "schema": {
+              "$ref": "#/definitions/ValidationError"
+            }
+          }
+        },
+        "security": [{ "Bearer": [] }]
+      },
+      "post": {
+        "tags": ["Product"],
+        "summary": "Add Products to the database",
+        "description": "Add Products to the database",
+        "parameters": [
+          {
+            "in": "body",
+            "description": "To create a new product",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "price": {
+                  "type": "integer",
+                  "example": 1200
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Maize"
+                },
+                "photoUrl": {
+                  "type": "string",
+                  "example": "https://www.kindpng.com/picc/m/111-1110337_corn-png-transparent-images-maize-seeds-png-download.png"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "It is consumed to convert to other source of food"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully adding items",
+            "schema": {
+              "$ref": "#/definitions/SingleResponse"
+            }
+          },
+          "400": {
+            "description": "Not successfully adding products/items",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "422": {
+            "description": "Wrong credential supplied",
+            "schema": {
+              "$ref": "#/definitions/ValidationError"
+            }
+          }
+        },
+        "security": [{ "Bearer": [] }]
+      }
+    },
+    "/product/{productId}": {
+      "get": {
+        "tags": ["Product"],
+        "summary": "Get A Products from the database",
+        "description": "Get A Products from the database",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "productId",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved a product",
+            "schema": {
+              "$ref": "#/definitions/SingleResponse"
+            }
+          },
+          "400": {
+            "description": "Not successfully retriving A products/items",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Product not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "422": {
+            "description": "Wrong credential supplied",
+            "schema": {
+              "$ref": "#/definitions/ValidationError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["Product"],
+        "summary": "Update A Products from the database",
+        "description": "Update A Products from the database",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "productId",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "To update an ite/product in the database",
+            "schema": {
+              "$ref": "#/definitions/ProductPayload"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved a product",
+            "schema": {
+              "$ref": "#/definitions/SingleResponse"
+            }
+          },
+          "400": {
+            "description": "Not successfully retriving A products/items",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Product not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "422": {
+            "description": "Wrong credential supplied",
+            "schema": {
+              "$ref": "#/definitions/ValidationError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["Product"],
+        "summary": "Delete A Products from the database",
+        "description": "Delete A Products from the database",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "productId",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleting a product/item",
+            "schema": {
+              "$ref": "#/definitions/SingleResponse"
+            }
+          },
+          "400": {
+            "description": "Not successfully deleting A products/items",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Product not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "422": {
+            "description": "Wrong credential supplied",
+            "schema": {
+              "$ref": "#/definitions/ValidationError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "in": "header",
+      "description": "Add token for authorization using the format Bearer (token) e.g. 'Bearer eetelteouou1223424nkdnkdgndkg'",
+      "name": "authorization"
+    }
+  },
+
+  "definitions": {
+    "SingleResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "price": {
+              "type": "integer"
+            },
+            "photoUrl": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "vendor": {
+              "type": "string"
+            },
+            "createAt": {
+              "type": "string"
+            },
+            "updatedAt": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "ListResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              },
+              "price": {
+                "type": "integer"
+              },
+              "photoUrl": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "vendor": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "success": {
+          "type": "boolean",
+          "example": false
+        }
+      }
+    },
+    "ValidationError": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "items[0].*": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ProductPayload": {
+      "type": "object",
+      "$ref": "#/definitions/ProductObject"
+    },
+    "ProductObject": {
+      "properties": {
+        "price": {
+          "type": "integer",
+          "example": 1200
+        },
+        "name": {
+          "type": "string",
+          "example": "Maize"
+        },
+        "photoUrl": {
+          "type": "string",
+          "example": "https://www.kindpng.com/picc/m/111-1110337_corn-png-transparent-images-maize-seeds-png-download.png"
+        },
+        "description": {
+          "type": "string",
+          "example": "It is consumed to convert to other source of food"
+        }
+      }
+    }
+  }
+}
