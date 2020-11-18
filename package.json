@@ -1,0 +1,43 @@
+{
+  "name": "e-commerce-pai",
+  "version": "1.0.0",
+  "main": "./src/index.js",
+  "license": "MIT",
+  "scripts": {
+    "start:dev": "nodemon --exec node ./src/index.js",
+    "start": "node ./src/index.js",
+    "db:migrate": "yarn knex migrate:latest",
+    "db:seed": "yarn knex seed:run",
+    "db:rollback": "yarn knex migrate:rollback --all",
+    "db:migrate:all": "yarn db:rollback && yarn db:migrate",
+    "db:migrate:seed": "yarn db:migrate && yarn db:seed",
+    "db:reseed": "yarn db:rollback && yarn db:migrate && yarn db:seed"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.1",
+    "express-validator": "^6.6.1",
+    "faker": "^5.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.21.12",
+    "mysql": "^2.18.1",
+    "swagger-ui-express": "^4.1.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "src"
+    ],
+    "ext": "js ts json",
+    "ignore": [
+      "*.test.ts",
+      "*.test.js"
+    ],
+    "delay": "3",
+    "execMap": {
+      "ts": "ts-node"
+    }
+  }
+}
